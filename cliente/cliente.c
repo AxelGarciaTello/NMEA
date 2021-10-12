@@ -5,18 +5,13 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#define TAM_BUFFER 100
+#include "estructura.h"
 
 #define PUERTO  5000
 #define DIR_IP "127.0.0.1"
 
 int main(){
-  char leer_mensaje[TAM_BUFFER];
-  char tiempo[100],
-       latitud[100],
-       longitud[100],
-       NS[100],
-       EW[100];
+  LOCALIZACION loc;
 
   int sockfd;
   struct sockaddr_in direccion_servidor;
@@ -44,70 +39,16 @@ int main(){
 
   printf("Recibiendo información...\n");
 
-	if( write(sockfd, "Soy el Cliente", 15) < 0 )
-	{
-		perror("Ocurrio un problema en el envio de un mensaje al cliente");
-		exit(1);
-	}
-
-	if (read (sockfd, tiempo, TAM_BUFFER) < 0)
+	if (read (sockfd, &loc, sizeof(LOCALIZACION)) < 0)
 	{
 		perror ("Ocurrio algun problema al recibir datos del cliente");
 		exit(1);
 	}
-	printf ("Tiempo: %s\n", tiempo);
-
-	if( write(sockfd, "Soy el Cliente", 15) < 0 )
-	{
-		perror("Ocurrio un problema en el envio de un mensaje al cliente");
-		exit(1);
-	}
-
-	if (read (sockfd, latitud, TAM_BUFFER) < 0)
-	{
-		perror ("Ocurrio algun problema al recibir datos del cliente");
-		exit(1);
-	}
-	printf ("latitud: %s\n", latitud);
-
-	if( write(sockfd, "Soy el Cliente", 15) < 0 )
-	{
-		perror("Ocurrio un problema en el envio de un mensaje al cliente");
-		exit(1);
-	}
-
-	if (read (sockfd, NS, TAM_BUFFER) < 0)
-	{
-		perror ("Ocurrio algun problema al recibir datos del cliente");
-		exit(1);
-	}
-	printf ("NS: %s\n", NS);
-
-	if( write(sockfd, "Soy el Cliente", 15) < 0 )
-	{
-		perror("Ocurrio un problema en el envio de un mensaje al cliente");
-		exit(1);
-	}
-
-	if (read (sockfd, longitud, TAM_BUFFER) < 0)
-	{
-		perror ("Ocurrio algun problema al recibir datos del cliente");
-		exit(1);
-	}
-	printf ("Longitud: %s\n", longitud);
-
-	if( write(sockfd, "Soy el Cliente", 15) < 0 )
-	{
-		perror("Ocurrio un problema en el envio de un mensaje al cliente");
-		exit(1);
-	}
-
-	if (read (sockfd, EW, TAM_BUFFER) < 0)
-	{
-		perror ("Ocurrio algun problema al recibir datos del cliente");
-		exit(1);
-	}
-	printf ("EW: %s\n", EW);
+	printf("Tiempo: %s\n", loc.tiempo);
+	printf("Latitud: %s\n", loc.latitud);
+	printf("NS: %c\n", loc.NS);
+	printf("Longitud: %s\n", loc.longitud);
+	printf("EW: %c\n", loc.EW);
 
   close(sockfd);
   return 0;

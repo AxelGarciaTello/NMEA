@@ -7,12 +7,9 @@
 #include "servidor.h"
 #include "procesos.h"
 #include "signal.h"
+#include "estructura.h"
 
-char tiempo[9],
-     latitud[10],
-     longitud[11],
-     NS[2],
-     EW[2];
+LOCALIZACION loc;
 
 int sockfd;
 pthread_t tid;
@@ -34,19 +31,23 @@ void *funHilo(){
        caracteres[3]=='G' &&
        caracteres[4]=='G' &&
        caracteres[5]=='A'){
+         for(i=0; i<8; i++)
+            loc.tiempo[i] = caracteres[i+7];
          for(i=0; i<9; i++)
-            tiempo[i] = caracteres[i+7];
-         for(i=0; i<9; i++)
-            latitud[i] = caracteres[i+17];
-         NS[0] = caracteres[28];
-         NS[1] = ' ';
-         for(i=0; i<11; i++)
-            longitud[i] = caracteres[i+30];
-         EW[0] =caracteres[42];
-         EW[1] = ' ';
+            loc.latitud[i] = caracteres[i+17];
+         loc.NS = caracteres[28];
+         for(i=0; i<10; i++)
+            loc.longitud[i] = caracteres[i+30];
+         loc.EW =caracteres[42];
          break;
        }
   }
+  printf("Tiempo: %s\n", loc.tiempo);
+  printf("Latitud: %s\n", loc.latitud);
+  printf("NS: %c\n", loc.NS);
+  printf("Longitud: %s\n", loc.longitud);
+  printf("EW: %c\n", loc.EW);
+
   fclose(fp);
   pthread_exit((void *)0);
 }
