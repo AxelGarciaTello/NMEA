@@ -15,6 +15,7 @@ char tiempo[9],
      EW[2];
 
 int sockfd;
+pthread_t tid;
 
 void *funHilo(){
   int i;
@@ -23,6 +24,7 @@ void *funHilo(){
   FILE *fp = fopen("nmea.txt","r");
   if(fp==NULL){
     perror("Error en la lectura del archivo\n");
+    pthread_exit((void *)-1);
   }
 
   while(feof(fp)==0){
@@ -46,6 +48,7 @@ void *funHilo(){
        }
   }
   fclose(fp);
+  pthread_exit((void *)0);
 }
 
 int main(){
@@ -62,15 +65,7 @@ int main(){
 	}
 
   printf("Leyendo archivo\n");
-  pthread_t tid;
   pthread_create(&tid, NULL, funHilo, NULL);
-  pthread_join(tid, NULL);
-
-  printf("Tiempo: %s\n",tiempo);
-  printf("Latitud: %s\n",latitud);
-  printf("N o s: %s\n",NS);
-  printf("Longitud: %s\n",longitud);
-  printf("E o W: %s\n",EW);
 
   sockfd = iniServidor();
 
